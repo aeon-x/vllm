@@ -467,6 +467,11 @@ class AnthropicServingMessages(OpenAIServingChat):
             usage=AnthropicUsage(
                 input_tokens=generator.usage.prompt_tokens,
                 output_tokens=generator.usage.completion_tokens,
+                cache_read_input_tokens=(
+                    generator.usage.prompt_tokens_details.cached_tokens
+                    if generator.usage.prompt_tokens_details
+                    else None
+                ),
             ),
             kv_transfer_params=generator.kv_transfer_params,
         )
@@ -623,6 +628,12 @@ class AnthropicServingMessages(OpenAIServingChat):
                                         if origin_chunk.usage
                                         else 0,
                                         output_tokens=0,
+                                        cache_read_input_tokens=(
+                                            origin_chunk.usage.prompt_tokens_details.cached_tokens
+                                            if origin_chunk.usage
+                                            and origin_chunk.usage.prompt_tokens_details
+                                            else None
+                                        ),
                                     ),
                                 ),
                             )
